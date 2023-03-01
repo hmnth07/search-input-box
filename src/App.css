@@ -1,38 +1,42 @@
-.App {
-  text-align: center;
+* {
+	font-family: sans-serif;
+}
+.searchBox {
+	width: 320px;
+	margin: 50px auto;
+	border: 1px solid grey;
+}
+.input {
+	width: 98%;
+}
+.list {
+	width: 100%;
+	height: 420px;
+	border: 1px solid black;
+	overflow-y: scroll;
+}
+.userCard {
+	padding: 8px 16px;
+	border-bottom: 1px solid grey;
+}
+.noCardFound {
+	margin: 40px auto;
+	text-align: center;
+	color: gray;
+	font-size: 24px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.userCard p {
+	margin: 5px auto;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.id {
+	font-weight: 700;
 }
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.name {
+	font-style: italic;
 }
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.address,
+.pincode {
+	color: grey;
+	font-size: 13px;
 }
