@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./App.css";
 import UserCard from "./components/UserCard";
 
@@ -70,19 +70,54 @@ function App() {
 	];
 	const [inputValue, setInputValue] = useState("");
 
-	const filteredData = mockData.filter((item) => {
+	const searchData = mockData.filter((item) => {
+		let newArr = [];
+		if (inputValue) {
+			newArr = item?.items?.filter((item) =>
+				item.toLowerCase().includes(inputValue.toLowerCase())
+			);
+		}
+
 		if (
-			item?.id.includes(inputValue) ||
-			item?.name.includes(inputValue) ||
-			item?.address.includes(inputValue) ||
-			item?.pincode.includes(inputValue)
+			item?.id.toLowerCase().includes(inputValue.toLowerCase()) ||
+			item?.name.toLowerCase().includes(inputValue.toLowerCase()) ||
+			item?.address.toLowerCase().includes(inputValue.toLowerCase()) ||
+			item?.pincode.toLowerCase().includes(inputValue.toLowerCase()) ||
+			newArr.length > 0
 		) {
+			newArr.length = 0;
 			return true;
 		}
 		return false;
 	});
 
-	console.log(filteredData.length, "filteredData");
+	const [selectedItem, setSelectedItem] = useState(-1);
+	const handleKeyDown = (e) => {
+		if (selectedItem < searchData.length) {
+			if (e.key === "ArrowUp" && selectedItem > 0) {
+				setSelectedItem((prev) => prev - 1);
+			} else if (
+				e.key === "ArrowDown" &&
+				selectedItem < searchData.length - 1
+			) {
+				setSelectedItem((prev) => prev + 1);
+			}
+		} else {
+			setSelectedItem(-1);
+		}
+	};
+	const scollToRef = useRef();
+
+	useEffect(() => {
+		if (selectedItem > 0 && scollToRef.current) {
+			scollToRef.current.scrollIntoView({
+				behavior: "smooth",
+				block: "end",
+				// inline: "nearest",
+			});
+		}
+	}, [selectedItem]);
+
 	return (
 		<div className="App">
 			<div className="searchBox">
@@ -91,12 +126,21 @@ function App() {
 					placeholder="search users by ID, Address, name"
 					value={inputValue}
 					onChange={(e) => setInputValue(e.target.value)}
+					onKeyDown={handleKeyDown}
 				/>
 				{inputValue && (
 					<div className="list">
-						{filteredData.length !== 0 ? (
-							filteredData?.map((item, index) => (
-								<UserCard key={index} user={item} />
+						{searchData.length !== 0 ? (
+							searchData?.map((user, index) => (
+								<div
+									key={user?.id}
+									className={
+										selectedItem === index ? "userCard active" : "userCard"
+									}
+									ref={scollToRef}
+								>
+									<UserCard user={user} inputValue={inputValue} />
+								</div>
 							))
 						) : (
 							<div className="noCardFound">No User Found</div>

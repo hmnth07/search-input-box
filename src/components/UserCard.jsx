@@ -1,15 +1,38 @@
 import React from "react";
 import "../App.css";
 
-function UserCard(props) {
+function UserCard({ user, inputValue }) {
+	function getHighlightedText(text, higlight) {
+		// Split text on higlight term, include term itself into parts, ignore case
+		const parts = text.split(new RegExp(`(${higlight})`, "gi"));
+		return parts.map((part, index) => (
+			<React.Fragment key={index}>
+				{part.toLowerCase() === higlight.toLowerCase() ? (
+					<b style={{ color: "blue" }}>{part}</b>
+				) : (
+					part
+				)}
+			</React.Fragment>
+		));
+	}
+
 	return (
-		<div className="userCard">
-			<p className="id">{props?.user?.id}</p>
-			<p className="name">{props?.user?.name}</p>
-			{/* TODO iTEMS */}
-			<p className="address">{props?.user?.address}</p>
-			<p className="pincode">{props?.user?.pincode}</p>
-		</div>
+		<>
+			<p className="id">{getHighlightedText(user?.id, inputValue)}</p>
+			<p className="name">{getHighlightedText(user?.name, inputValue)}</p>
+			{/* “john” found in items */}
+			{user?.items?.map((item, index) => (
+				<div key={index}>
+					{item.toLowerCase().includes(inputValue.toLowerCase()) && (
+						<li>
+							<b style={{ color: "blue" }}>"{inputValue}"</b> found in items
+						</li>
+					)}
+				</div>
+			))}
+			<p className="address">{getHighlightedText(user?.address, inputValue)}</p>
+			<p className="pincode">{getHighlightedText(user?.pincode, inputValue)}</p>
+		</>
 	);
 }
 
